@@ -1,0 +1,36 @@
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score
+
+# Load the dataset
+data = pd.read_csv('soccer_matches.csv')
+
+# Define features and target
+features = data[['home_rank', 'away_rank', 'home_goals', 'away_goals']]
+target = data['outcome']
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=0.2, random_state=42)
+
+# Create and train the model
+model = LogisticRegression()
+model.fit(X_train, y_train)
+
+# Make predictions on the test set
+predictions = model.predict(X_test)
+
+# Evaluate the model
+accuracy = accuracy_score(y_test, predictions)
+print(f'Accuracy: {accuracy:.2f}')
+
+# Example: Predicting the outcome of a new match
+new_match = pd.DataFrame({
+    'home_rank': [3],
+    'away_rank': [4],
+    'home_goals': [1],
+    'away_goals': [2]
+})
+
+prediction = model.predict(new_match)
+print(f'Predicted outcome: {prediction[0]}')  # 1 for home win, 0 for draw, -1 for away win
